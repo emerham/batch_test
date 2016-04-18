@@ -1,0 +1,3 @@
+name = Batch Test Module
+description = Batch Test module to get an idea about how to write a Batch app
+core = 7.x

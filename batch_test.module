@@ -1,0 +1,71 @@
+<?php
+/**
+ * @file
+ * Main module file.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function batch_test_help($path, $arg) {
+
+}
+/**
+ * Implements hook_permission().
+ */
+function batch_test_permission() {
+  $perm_array = array();
+  $perm_array['batch test'] = array(
+    'title' => t('Access Batch Test Form'),
+    'description' => t('Allow Access to the Batch Test submit form'),
+  );
+  $perm_array['administer batch test'] = array(
+    'title' => t('Access Batch Test Administration'),
+    'description' => t('Allow access to the batch test admin page'),
+  );
+  return $perm_array;
+}
+/**
+ * Implements hook_menu().
+ */
+function batch_test_menu() {
+  $items = array();
+  $items['my_test/batch'] = array(
+    'title' => 'Batch Test.',
+    'description' => 'My Custom Batch Test API.',
+    'access arguments' => array('batch test'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('batch_test_form'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+/**
+ * Implements hook_form().
+ */
+function batch_test_form($form, &$form_state) {
+  $form = array();
+  $form['start_num'] = array(
+    '#title' => t('Starting Number'),
+    '#description' => t('Enter a number to start from of the Batch api.'),
+    '#type' => 'textfield',
+    '#required' => TRUE,
+  );
+  $form['end_num'] = array(
+    '#title' => t('Ending Number'),
+    '#description' => t('Enter a number to End the Batch api.'),
+    '#type' => 'textfield',
+    '#required' => TRUE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+  return $form;
+}
+/**
+ * Implements hook_form_submit().
+ */
+function batch_test_form_submit($form, &$form_state) {
+  
+}
