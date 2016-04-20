@@ -33,7 +33,7 @@ function batch_test_permission() {
 function batch_test_menu() {
   $items = array();
   $items['my_test/batch'] = array(
-    'title' => 'Batch Test.',
+    'title' => 'Batch Test',
     'description' => 'My Custom Batch Test API.',
     'access arguments' => array('batch test'),
     'page callback' => 'drupal_get_form',
@@ -74,23 +74,40 @@ function batch_test_form_submit($form, &$form_state) {
   $batch_options = array();
   $my_array = range($form_state['values']['start_num'], $form_state['values']['end_num'], 1);
   foreach($my_array as $index){
-    $batch_options[] = my_batch_run_fun($index);
+    $batch_options[] = array('my_batch_run_fun', array($index));
   }
+  // Create the information to start a Batch Process.
   $batch = array(
     'title' => t('My Test Batch'),
+    // The array of functions and items passed to that function.
     'operations' => $batch_options,
+    // When all done go to finished function.
     'finished' => 'batch_test_finished',
+    // Message to show in the bar when starting
+    'init_message' => t('Example Batch is starting.'),
+    // Message to show while running. Available placeholders are @current, @remaining, @total, @percentage, @estimate and @elapsed.
     'progress_message' => t('Processing @current out of @total.'),
   );
 
   batch_set($batch);
 }
 
-function my_batch_run_fun($number){
-  sleep(10);
+function my_batch_run_fun($number, &$context){
+  if (empty($context['sandbox'])) {
+    $context['sandbox'] = array();
+    $context['sandbox']['progress'] = 0;
+  }
+  $context['sandbox']['progress']++;
+  sleep(2);
 }
 function batch_test_finished($success, $results, $operations) {
   if ($success) {
+    // Here we do something meaningful with the results.
+    //$message = t('@count items successfully processed:', array('@count' => count($results)));
+    // $message .= theme('item_list', $results);  // D6 syntax
+    //$message .= theme('item_list', array('items' => $results));
+    // Display the message
+    //drupal_set_message($message);
   }
   else {
     // An error occurred.
